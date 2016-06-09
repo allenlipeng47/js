@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+.sphere {
+  fill: none;
+  stroke: #ccc;
+  shape-rendering: crispEdges;
+}
+
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-opacity: .2;
+}
+
+.mesh {
+  fill: none;
+  stroke: #000;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.js" ></script>
+<script src="albers-usa-pr.js"></script>
+<button type="button" id="btn1">Click</button>
+<input type="text" id="longti" value="-122.490402" style="width:50px">
+<input type="text" id="lati" value="37.786453" style="width:50px">
+<svg width="960" height="500" id="statesvg">
+	<circle cx="60" cy="25" style="r:10" fill="red" id="c1"></circle>
+	<circle cx="60" cy="25" style="r:5" fill="red" id="c2"></circle>
+</svg> <!-- svg to hold the map. -->
+<script>
+
+var width = 960,
+    height = 500;
+
+var projection = albersUsaPr()
+    .scale(1070)
+    .translate([width / 2, height / 2]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+//var svg = d3.select("body").append("svg")
+//    .attr("width", width)
+//    .attr("height", height);
+var svg = d3.select("#statesvg");
+
+var graticule = d3.geo.graticule()
+    .step([2, 2]);
+
+svg.append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.append("path")
+    .datum({type: "Sphere"})
+    .attr("class", "sphere")
+    .attr("d", path);
+
+	// mesh
+/**svg.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);**/
+
+//svg.on("mousemove", function() {
+//  console.log(projection.invert(d3.mouse(this)));
+//  console.log(d3.mouse(this));
+//});
+
+d3.json("us.json", function(error, us) {
+  //if (error) throw error;
+
+
+  svg.append("path")
+      .datum(topojson.mesh(us))
+      .attr("class", "mesh")
+      .attr("d", path);
+
+	  
+//  svg.insert("path", ".graticule")
+//      .datum(topojson.feature(us, us.objects.land))
+//      .attr("class", "land")
+//      .attr("d", path);
+
+//  svg.insert("path", ".graticule")
+//      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+//      .attr("class", "state-boundary")
+//      .attr("d", path);
+	  
+});
+
+$("#btn1").click(function () {
+		//svg.append("circle").attr("cx", "60").attr("cy", "25").attr("r", "10").attr("fill", "red").attr("id", "c1");
+		//svg.append("circle").attr("cx", "60").attr("cy", "25").attr("r", "5").attr("fill", "red").attr("id", "c2");
+		$("#c1").remove();
+		$("#c2").remove();
+		svg.append("circle").attr("cx", "60").attr("cy", "25").attr("fill", "red").attr("id", "c1");
+		svg.append("circle").attr("cx", "60").attr("cy", "25").attr("fill", "red").attr("id", "c2");
+		
+		var lonlati = [$("#longti").val(), $("#lati").val()];
+		var longti = projection(lonlati)[0];
+		var lati = projection(lonlati)[1];
+		
+		$("#c1").attr("cx", longti).attr("cy", lati);
+		$("#c2").attr("cx", longti).attr("cy", lati);
+		
+		$("#c1").css("r", "15");
+		$("#c2").css("r", "0");
+		$("#c1").css("fill-opacity", "1");
+		$("#c2").css("fill-opacity", "1");
+		
+		$("#c1").animate({"r": "100", "fill-opacity": "0"});
+		$("#c2").animate({"r": "100", "fill-opacity": "0"});
+	}
+);
+
+</script>

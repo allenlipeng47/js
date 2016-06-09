@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.land {
+  fill: #222;
+}
+
+.county-boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+}
+
+.state-boundary {
+  fill: none;
+  stroke: #fff;
+}
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.js" ></script>
+<script src="albers-usa-pr.js"></script>
+<button type="button" id="btn2">Prepare</button>
+<button type="button" id="btn1">Click</button>
+<input type="text" id="longti" value="-122.490402" style="width:50px">
+<input type="text" id="lati" value="37.786453" style="width:50px">
+<svg width="960" height="500" id="statesvg">
+<!--	<circle cx="60" cy="25" style="r:10" fill="red" id="c1"></circle>
+	<circle cx="60" cy="25" style="r:5" fill="red" id="c2"></circle> -->
+</svg> <!-- svg to hold the map. -->
+<script>
+
+var width = 960,
+    height = 500;
+
+//var projection = d3.geo.albersUsa().scale(1000).translate([width / 2, height / 2]);
+var projection = albersUsaPr().scale(1070).translate([width / 2, height / 2]);	
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var svg = d3.select("#statesvg");
+
+d3.json("us.json", function(error, us) {
+  if (error) throw error;
+
+  svg.insert("path", ".graticule")
+      .datum(topojson.feature(us, us.objects.land))
+      .attr("class", "land")
+      .attr("d", path);
+
+  svg.insert("path", ".graticule")
+      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+      .attr("class", "state-boundary")
+      .attr("d", path);
+});
+
+d3.select(self.frameElement).style("height", height + "px");
+
+// <circle cx="60" cy="25" style="r:10" fill="red" id="c1"></circle>
+
+$("#btn1").click(function () {
+		$("#c1").remove();
+		$("#c2").remove();
+		svg.append("circle").attr("cx", "60").attr("cy", "25").attr("fill", "red").attr("id", "c1");
+		svg.append("circle").attr("cx", "60").attr("cy", "25").attr("fill", "red").attr("id", "c2");
+		
+		var lonlati = [$("#longti").val(), $("#lati").val()];
+		var longti = projection(lonlati)[0];
+		var lati = projection(lonlati)[1];
+		
+		$("#c1").attr("cx", longti).attr("cy", lati);
+		$("#c2").attr("cx", longti).attr("cy", lati);
+		
+		$("#c1").css("r", "15");
+		$("#c2").css("r", "0");
+		$("#c1").css("fill-opacity", "1");
+		$("#c2").css("fill-opacity", "1");
+		
+		$("#c1").animate({"r": "100", "fill-opacity": "0"});
+		$("#c2").animate({"r": "100", "fill-opacity": "0"});
+	}
+);
+
+</script>

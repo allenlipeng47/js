@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>d3 test</title>
+<script src="https://code.jquery.com/jquery-1.11.3.js" ></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+
+<style type="text/css">
+	.feature {
+		fill: none;
+		stroke: grey;
+		stroke-width: 1px;
+  		stroke-linejoin: round;
+	}
+	.mesh {
+		fill: none;
+  		stroke: lightgrey;
+  		stroke-width: 2px;
+  		stroke-linejoin: round;
+	}
+	h1 {
+		font-family: sans-serif;
+	}
+</style>
+</head>
+<body>
+<p>abcd</p>
+<p>cdef</p>
+<button id="btn1" type="button">Change All P size</button>
+<button id="btn2" type="button">Append</button>
+<button id="btn3" type="button">Update</button>
+<script>
+$("#btn1").click(function () {
+	d3.selectAll("p").data([4, 20]).style("font-size", function(d) { return d + "px"; });
+});
+
+$("#btn2").click(function () {
+
+	d3.select("body").selectAll("p")
+	.data([4, 20, 40, 50, 60])
+	.enter().append("p")
+	.text(function(d) {return d;});
+});
+
+$("#btn3").click(function () {
+
+	d3.select("body").selectAll("p")
+	.data([4, 20, 40, 50, 60])
+	.text(function(d) {return d;});
+});
+</script> 
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Point on a map D3</title>
+<script src="https://code.jquery.com/jquery-1.11.3.js" ></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+
+<style type="text/css">
+	.feature {
+		fill: none;
+		stroke: grey;
+		stroke-width: 1px;
+  		stroke-linejoin: round;
+	}
+	.mesh {
+		fill: none;
+  		stroke: lightgrey;
+  		stroke-width: 2px;
+  		stroke-linejoin: round;
+	}
+	h1 {
+		font-family: sans-serif;
+	}
+</style>
+</head>
+<body>
+<button type="button" id="btn">Prepare</button>
+<script>
+$("#btn").click(function () {
+			$.ajax({
+							type: "GET",
+							url: "http://10.13.11.211:8080/d3map/getAcct",
+							success: function (res){
+								$("#btn3").html(123);
+								alert(res.text);
+							},
+							error: function(jqXHR, textStatus, errorThrown) { 
+								alert(jqXHR); 
+							}
+	});
+	}
+);
+</script> 
+</body>
+</html>

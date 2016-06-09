@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+	.state{
+		fill: none;
+		stroke: #a9a9a9;
+		stroke-width: 1;
+	}
+	.state:hover{
+		fill-opacity:0.5;
+	}
+	#tooltip {   
+		position: absolute;           
+		text-align: center;
+		padding: 20px;             
+		margin: 10px;
+		font: 12px sans-serif;        
+		background: lightsteelblue;   
+		border: 1px;      
+		border-radius: 2px;           
+		pointer-events: none;         
+	}
+	#tooltip h4{
+		margin:0;
+		font-size:14px;
+	}
+	#tooltip{
+		background:rgba(0,0,0,0.9);
+		border:1px solid grey;
+		border-radius:5px;
+		font-size:12px;
+		width:auto;
+		padding:4px;
+		color:white;
+		opacity:0;
+	}
+	#tooltip table{
+		table-layout:fixed;
+	}
+	#tooltip tr td{
+		padding:0;
+		margin:0;
+	}
+	#tooltip tr td:nth-child(1){
+		width:50px;
+	}
+	#tooltip tr td:nth-child(2){
+		text-align:center;
+	}
+</style>
+<body>
+<div id="tooltip"></div><!-- div to hold tooltip. -->
+<button type="button" id="btn1">Click</button>
+<button type="button" id="btn2">Click</button>
+<svg width="960" height="600" id="statesvg">
+	<circle cx="150" cy="150" fill="red" id="c1" style="r: 5px"/>
+	<circle cx="150" cy="150" fill="red" id="c2" style="r: 0px"/>
+	
+</svg> <!-- svg to hold the map. -->
+<script src="uStates.js"></script> <!-- creates uStates. -->
+<script src="https://d3js.org/d3-timer.v0.4.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.js" ></script>
+<script src="https://raw.githubusercontent.com/julianshapiro/velocity/master/velocity.min.js"></script>
+<script>
+	var svg = d3.select("#statesvg");	//select svg by id
+	
+	// append a circle in svg
+	// svg.append("circle").attr("cx", "60").attr("cy", "25").attr("r", "25").attr("fill", "red");
+	
+	// var marks = [{long: -75, lat: 43},{long: -78, lat: 41},{long: -70, lat: 53}];
+	svg.append("image").attr('width', 20).attr('height', 20).attr("xlink:href",'https://cdn3.iconfinder.com/data/icons/softwaredemo/PNG/24x24/DrawingPin1_Blue.png').attr('x', 120).attr('y', 120).attr('id', 'svgimage');
+	
+	$("#btn1").click(function () {
+		//svg.append("circle").attr("cx", "60").attr("cy", "25").attr("r", "10").attr("fill", "red").attr("id", "c1");
+		//svg.append("circle").attr("cx", "60").attr("cy", "25").attr("r", "5").attr("fill", "red").attr("id", "c2");
+		$("#c1").css("r", "15");
+		$("#c2").css("r", "0");
+		$("#c1").css("fill-opacity", "1");
+		$("#c2").css("fill-opacity", "1");
+		
+		$("#c1").animate({"r": "100", "fill-opacity": "0"});
+		$("#c2").animate({"r": "100", "fill-opacity": "0"});
+	}
+	);
+
+	$("#btn2").click(function () {
+		$("#c1").animate({r: "100", "fill-opacity": "0.5"});
+		$("#c2").animate({r: "100", "fill-opacity": "0.5"});
+	}
+	);
+	
+	
+</script>
+</body>
